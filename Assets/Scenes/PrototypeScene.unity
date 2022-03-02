@@ -784,6 +784,7 @@ MonoBehaviour:
   - {fileID: 1787591220}
   hearingDistance: 10
   sightDistance: 30
+  BC: {fileID: 3310780566444045674, guid: fb636cfa0bf61a041be96cf7050f3f5b, type: 3}
 --- !u!95 &1038832120
 Animator:
   serializedVersion: 3

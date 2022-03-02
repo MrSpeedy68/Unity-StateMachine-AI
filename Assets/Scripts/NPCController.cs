@@ -16,11 +16,17 @@ public class NPCController : MonoBehaviour
     private int _WPCount = 0;
     private GameObject _player;
     private NavMeshAgent _NavMeshAgent;
+    
+    private Vector3 _previousPosition;
+    private float _counter = 0;
+    public GameObject BC;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _previousPosition = transform.position;
+        
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
@@ -32,6 +38,17 @@ public class NPCController : MonoBehaviour
     void Update()
     {
         _animationStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+        Vector3 currentPosition = transform.position;
+        float distance = Vector3.Distance(_previousPosition, currentPosition);
+        if (distance > 1.0f)
+        {
+            _previousPosition = currentPosition;
+            GameObject g = Instantiate(BC, currentPosition, Quaternion.identity);
+            g.name = "BC" + _counter;
+            _counter++;
+        }
+        
         
         Listen();
         Sight();
@@ -72,7 +89,14 @@ public class NPCController : MonoBehaviour
         if (Physics.Raycast(ray.origin, ray.direction, out hit, sightDistance))
         {
             objectInSight = hit.collider.gameObject.name;
-            if (objectInSight == "FPSController") _animator.SetBool("canSeePlayer",true);
+            if (objectInSight == "FPSController")
+            {
+                _animator.SetBool("canSeePlayer",true);
+            }
+            else
+            {
+                _animator.SetBool("canSeePlayer",false);
+            }
         }
     }
 

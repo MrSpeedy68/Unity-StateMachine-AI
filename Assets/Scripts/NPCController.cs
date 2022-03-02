@@ -8,6 +8,7 @@ public class NPCController : MonoBehaviour
 {
     public List<GameObject> wayPoints;
     public float hearingDistance;
+    public float sightDistance;
 
     private Animator _animator;
     private bool _isPatroling = true;
@@ -23,6 +24,8 @@ public class NPCController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
+        
+        _animator.SetTrigger("startPatrol");
     }
 
     // Update is called once per frame
@@ -30,19 +33,15 @@ public class NPCController : MonoBehaviour
     {
         _animationStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         
-        //Hearing
+        Listen();
+        Sight();
         
-        float distance = Vector3.Distance(transform.position, _player.transform.position);
-        if (distance <= hearingDistance)
-        {
-            _animator.SetBool("canHearPlayer",true);
-        }
-        else _animator.SetBool("canHearPlayer",false);
-
         if (_animationStateInfo.IsName("FollowPlayer"))
         {
             _NavMeshAgent.SetDestination(_player.transform.position);
         }
+
+        
         
         //Patrolling
         
@@ -58,6 +57,35 @@ public class NPCController : MonoBehaviour
         }
         
 
+    }
+
+    private void Sight()
+    {
+        Ray ray = new Ray();
+        RaycastHit hit;
+        ray.origin = transform.position + Vector3.up * 1.5f;
+        string objectInSight;
+
+        ray.direction = transform.forward * sightDistance;
+        Debug.DrawRay(ray.origin, ray.direction * sightDistance, Color.red);
+
+        if (Physics.Raycast(ray.origin, ray.direction, out hit, sightDistance))
+        {
+            objectInSight = hit.collider.gameObject.name;
+            if (objectInSight == "FPSController") _animator.SetBool("canSeePlayer",true);
+        }
+    }
+
+    private void Listen()
+    {
+        //Hearing
+        
+        float distance = Vector3.Distance(transform.position, _player.transform.position);
+        if (distance <= hearingDistance)
+        {
+            _animator.SetBool("canHearPlayer",true);
+        }
+        else _animator.SetBool("canHearPlayer",false);
     }
 
     private void MoveToNextWP()

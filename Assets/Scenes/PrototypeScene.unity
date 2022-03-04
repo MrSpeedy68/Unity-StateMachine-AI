@@ -418,6 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSize: 30
   fireRate: 45
+  damage: 25
+  currentAmmo: 0
 --- !u!1001 &443651005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -785,6 +787,7 @@ MonoBehaviour:
   hearingDistance: 10
   sightDistance: 30
   smellDuration: 0
+  health: 100
 --- !u!95 &1038832120
 Animator:
   serializedVersion: 3

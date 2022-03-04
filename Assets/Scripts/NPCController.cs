@@ -7,9 +7,10 @@ using UnityEngine.AI;
 public class NPCController : MonoBehaviour
 {
     public List<GameObject> wayPoints;
-    public float hearingDistance;
-    public float sightDistance;
+    public float hearingDistance = 10f;
+    public float sightDistance = 30f;
     public float smellDuration;
+    public float health = 100f;
 
     private Animator _animator;
     private bool _isPatroling = true;
@@ -61,6 +62,8 @@ public class NPCController : MonoBehaviour
             smellDuration -= Time.deltaTime;
         }
         else _animator.SetBool("canSmellPlayer", false);
+        
+        CheckDeath();
     }
 
     private void Sight()
@@ -112,11 +115,28 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    public void TakeDamage(float damageAmount)
     {
-        if (other.gameObject.CompareTag("BreadCrumb"))
+        _animator.SetBool("wasShot",true);
+        health -= damageAmount;
+
+        StartCoroutine("StopFollowingPlayer");
+    }
+
+    private IEnumerator StopFollowingPlayer()
+    {
+        yield return new WaitForSeconds(10f);
+        
+        _animator.SetBool("wasShot",false);
+        
+        yield return null;
+    }
+
+    private void CheckDeath()
+    {
+        if (health <= 0f)
         {
-            Debug.Log("Foiund Crumb fam");
+            Destroy(gameObject);
         }
     }
 

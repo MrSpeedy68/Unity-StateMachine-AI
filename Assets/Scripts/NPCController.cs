@@ -56,6 +56,13 @@ public class NPCController : MonoBehaviour
             _NavMeshAgent.SetDestination(target.transform.position);
         }
         
+        //Death
+        if (_animationStateInfo.IsName("Death"))
+        {
+            _NavMeshAgent.isStopped = true;
+            Destroy(gameObject,25f);
+        }
+        
         //Smell Counter
         if (smellDuration > 0f)
         {
@@ -63,7 +70,6 @@ public class NPCController : MonoBehaviour
         }
         else _animator.SetBool("canSmellPlayer", false);
         
-        CheckDeath();
     }
 
     private void Sight()
@@ -119,6 +125,7 @@ public class NPCController : MonoBehaviour
     {
         _animator.SetBool("wasShot",true);
         health -= damageAmount;
+        CheckDeath();
 
         StartCoroutine("StopFollowingPlayer");
     }
@@ -136,7 +143,7 @@ public class NPCController : MonoBehaviour
     {
         if (health <= 0f)
         {
-            Destroy(gameObject);
+            _animator.SetBool("isDead", true);
         }
     }
 

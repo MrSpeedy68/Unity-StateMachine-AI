@@ -12,13 +12,18 @@ public class NPCController : MonoBehaviour
     public float smellDuration;
     public float health = 100f;
 
+    public float weaponDamage;
+    public int magazineSize;
+    public int currentAmmo;
+    
+    
     private Animator _animator;
     private bool _isPatroling = true;
     private AnimatorStateInfo _animationStateInfo;
     private int _WPCount = 0;
     private GameObject _player;
     private NavMeshAgent _NavMeshAgent;
-
+    private float shootingTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +33,12 @@ public class NPCController : MonoBehaviour
         _NavMeshAgent = GetComponent<NavMeshAgent>();
         
         _animator.SetTrigger("startPatrol");
+
+        currentAmmo = magazineSize;
+
+        shootingTimer = _animator.GetFloat("timeTillFire");
+        _animator.SetInteger("currentAmmo", magazineSize);
+        _animator.SetFloat("health", health);
     }
 
     // Update is called once per frame
@@ -41,6 +52,15 @@ public class NPCController : MonoBehaviour
         if (_animationStateInfo.IsName("FollowPlayer"))
         {
             _NavMeshAgent.SetDestination(_player.transform.position);
+
+             shootingTimer -= Time.deltaTime;
+             _animator.SetFloat("timeTillFire",shootingTimer);
+
+             if (shootingTimer <= 0)
+             {
+                 shootingTimer = 3f;
+                 Shoot();
+             }
         }
 
         //Patrolling
@@ -55,7 +75,7 @@ public class NPCController : MonoBehaviour
 
             _NavMeshAgent.SetDestination(target.transform.position);
         }
-        
+
         //Death
         if (_animationStateInfo.IsName("Death"))
         {
@@ -70,6 +90,11 @@ public class NPCController : MonoBehaviour
         }
         else _animator.SetBool("canSmellPlayer", false);
         
+        
+        
+        
+        
+        //Debug.DrawRay(transform.position + Vector3.up, transform.forward * 1000, Color.yellow);
     }
 
     private void Sight()
@@ -124,10 +149,28 @@ public class NPCController : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         _animator.SetBool("wasShot",true);
+        
         health -= damageAmount;
-        CheckDeath();
+        _animator.SetFloat("health", health);
 
         StartCoroutine("StopFollowingPlayer");
+    }
+
+    private void Shoot()
+    {
+        currentAmmo--;
+        Debug.Log(currentAmmo);
+        _animator.SetInteger("currentAmmo", currentAmmo);
+        
+        if (Physics.Raycast(transform.position + Vector3.up,transform.forward,out RaycastHit hit,float.MaxValue))
+        {
+            if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                Debug.Log("Hit Player");
+                var Player = hit.collider.GetComponent<Player>();
+                Player.TakeDamage(weaponDamage);
+            }
+        }
     }
 
     private IEnumerator StopFollowingPlayer()
@@ -137,14 +180,6 @@ public class NPCController : MonoBehaviour
         _animator.SetBool("wasShot",false);
         
         yield return null;
-    }
-
-    private void CheckDeath()
-    {
-        if (health <= 0f)
-        {
-            _animator.SetBool("isDead", true);
-        }
     }
 
     private void MoveToNextWP()

@@ -399,6 +399,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d0124d3bdb8cba4f834aae3a9962ddc, type: 3}
+--- !u!20 &393607291 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+  m_PrefabInstance: {fileID: 1544760237}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &424579927 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: fb98406df768fd347a74f32a4a7504cf, type: 3}
@@ -418,8 +423,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSize: 30
   fireRate: 45
-  damage: 25
+  damage: 30
   currentAmmo: 0
+  cam: {fileID: 393607291}
 --- !u!1001 &443651005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -786,8 +792,11 @@ MonoBehaviour:
   - {fileID: 1787591220}
   hearingDistance: 10
   sightDistance: 30
-  smellDuration: 0
+  smellDuration: 3
   health: 100
+  weaponDamage: 10
+  magazineSize: 30
+  currentAmmo: 0
 --- !u!95 &1038832120
 Animator:
   serializedVersion: 3
@@ -1007,6 +1016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab632deba2c758469203af779f776b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _health: 100
 --- !u!1 &1150165133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,6 +1228,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_Name
       value: FPSController
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_RootOrder

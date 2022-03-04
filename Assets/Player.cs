@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private float _health;
+    [SerializeField] private float _health = 100f;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,5 +15,10 @@ public class Player : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _health -= damage;
     }
 }

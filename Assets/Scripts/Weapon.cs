@@ -8,6 +8,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float fireRate;
     [SerializeField] private float damage;
     [SerializeField] private int currentAmmo;
+    [SerializeField] private Camera cam;
     
     // Start is called before the first frame update
     void Start()
@@ -35,7 +36,7 @@ public class Weapon : MonoBehaviour
     {
         currentAmmo--;
         
-        if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit,
+        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit,
             float.MaxValue))
         {
             if (hit.collider.gameObject.CompareTag("AI"))

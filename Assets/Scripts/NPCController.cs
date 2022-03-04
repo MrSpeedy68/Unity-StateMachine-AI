@@ -9,6 +9,7 @@ public class NPCController : MonoBehaviour
     public List<GameObject> wayPoints;
     public float hearingDistance;
     public float sightDistance;
+    public float smellDuration;
 
     private Animator _animator;
     private bool _isPatroling = true;
@@ -16,17 +17,11 @@ public class NPCController : MonoBehaviour
     private int _WPCount = 0;
     private GameObject _player;
     private NavMeshAgent _NavMeshAgent;
-    
-    private Vector3 _previousPosition;
-    private float _counter = 0;
-    public GameObject BC;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        _previousPosition = transform.position;
-        
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
@@ -38,28 +33,15 @@ public class NPCController : MonoBehaviour
     void Update()
     {
         _animationStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-
-        Vector3 currentPosition = transform.position;
-        float distance = Vector3.Distance(_previousPosition, currentPosition);
-        if (distance > 1.0f)
-        {
-            _previousPosition = currentPosition;
-            GameObject g = Instantiate(BC, currentPosition, Quaternion.identity);
-            g.name = "BC" + _counter;
-            _counter++;
-        }
-        
         
         Listen();
         Sight();
-        
+
         if (_animationStateInfo.IsName("FollowPlayer"))
         {
             _NavMeshAgent.SetDestination(_player.transform.position);
         }
 
-        
-        
         //Patrolling
         
         if (_animationStateInfo.IsName("Patrol"))
@@ -73,7 +55,12 @@ public class NPCController : MonoBehaviour
             _NavMeshAgent.SetDestination(target.transform.position);
         }
         
-
+        //Smell Counter
+        if (smellDuration > 0f)
+        {
+            smellDuration -= Time.deltaTime;
+        }
+        else _animator.SetBool("canSmellPlayer", false);
     }
 
     private void Sight()
@@ -98,18 +85,39 @@ public class NPCController : MonoBehaviour
                 _animator.SetBool("canSeePlayer",false);
             }
         }
+        else _animator.SetBool("canSeePlayer",false);
     }
 
     private void Listen()
     {
-        //Hearing
-        
         float distance = Vector3.Distance(transform.position, _player.transform.position);
         if (distance <= hearingDistance)
         {
             _animator.SetBool("canHearPlayer",true);
         }
         else _animator.SetBool("canHearPlayer",false);
+    }
+
+    private void Smell()
+    {
+        smellDuration = 3f;
+        _animator.SetBool("canSmellPlayer", true);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("BreadCrumb"))
+        {
+            Smell();
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("BreadCrumb"))
+        {
+            Debug.Log("Foiund Crumb fam");
+        }
     }
 
     private void MoveToNextWP()

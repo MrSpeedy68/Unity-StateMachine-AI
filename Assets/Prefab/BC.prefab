@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 7705978807514004464}
   - component: {fileID: 236936314108048372}
   - component: {fileID: 7442496910778087520}
-  - component: {fileID: -3414215731958016443}
+  - component: {fileID: 3089852307361780274}
+  - component: {fileID: 8429618591879227556}
   m_Layer: 0
   m_Name: BC
-  m_TagString: Untagged
+  m_TagString: BreadCrumb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,7 +83,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-3414215731958016443
+--- !u!135 &3089852307361780274
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3310780566444045674}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.49999997
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8429618591879227556
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,6 +105,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3310780566444045674}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dbd463aef5c65041a50b4a7094f2b66, type: 3}
+  m_Script: {fileID: 11500000, guid: 6113273d4ab71a54e83fee8898fe4e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

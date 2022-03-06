@@ -3,19 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class NPCController : MonoBehaviour
 {
+    [Header("AI Movement")]
     public List<GameObject> wayPoints;
+    public bool useRandomMovement;
+    
+    [Header("Detection Settings")]
     public float hearingDistance = 10f;
     public float sightDistance = 30f;
     public float smellDuration;
+    
+    [Header("AI Attributes")]
     public float health = 100f;
-
     public float weaponDamage;
     public int magazineSize;
     public int currentAmmo;
     
+    [Header("AI Type")]
+    [SerializeField] private AIType aiType;
+
+    private enum AIType
+    {
+        ThePatroller,
+        TheIntelligentPatroller,
+        TheHunter,
+        TheSniper,
+        TheTeam,
+        TheMob
+    };
     
     private Animator _animator;
     private bool _isPatroling = true;
@@ -24,6 +42,7 @@ public class NPCController : MonoBehaviour
     private GameObject _player;
     private NavMeshAgent _NavMeshAgent;
     private float shootingTimer;
+    private Vector3 randTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +58,8 @@ public class NPCController : MonoBehaviour
         shootingTimer = _animator.GetFloat("timeTillFire");
         _animator.SetInteger("currentAmmo", magazineSize);
         _animator.SetFloat("health", health);
+        
+        randTarget = transform.position;
     }
 
     // Update is called once per frame
@@ -64,16 +85,26 @@ public class NPCController : MonoBehaviour
         }
 
         //Patrolling
-        
         if (_animationStateInfo.IsName("Patrol"))
         {
-            var target = wayPoints[_WPCount];
-            if (Vector3.Distance(transform.position, target.transform.position) < 1.0)
+            if (!useRandomMovement)
             {
-                MoveToNextWP();
+                var target = wayPoints[_WPCount];
+                if (Vector3.Distance(transform.position, target.transform.position) < 1.0)
+                {
+                    MoveToNextWP();
+                }
+                _NavMeshAgent.SetDestination(target.transform.position);
             }
-
-            _NavMeshAgent.SetDestination(target.transform.position);
+            else
+            {
+                
+                if (Vector3.Distance(transform.position, randTarget) < 1.0)
+                {
+                    randTarget = MoveToRandomWP();
+                }
+                _NavMeshAgent.SetDestination(randTarget);
+            }
         }
 
         //Death
@@ -89,12 +120,6 @@ public class NPCController : MonoBehaviour
             smellDuration -= Time.deltaTime;
         }
         else _animator.SetBool("canSmellPlayer", false);
-        
-        
-        
-        
-        
-        //Debug.DrawRay(transform.position + Vector3.up, transform.forward * 1000, Color.yellow);
     }
 
     private void Sight()
@@ -180,6 +205,34 @@ public class NPCController : MonoBehaviour
         _animator.SetBool("wasShot",false);
         
         yield return null;
+    }
+
+    private Vector3 MoveToRandomWP()
+    {
+        Ray ray = new Ray();
+        RaycastHit hit;
+        ray.origin = transform.position + Vector3.up * 0.7f;
+        float distanceToObstacle = 0;
+        float castingDistance = 20;
+        do
+        {
+            float randomDirectionX = Random.Range(-1, 1);
+            float randomDirectionZ = Random.Range(-1, 1);
+            ray.direction = transform.forward * randomDirectionZ + transform.right * randomDirectionX;
+            if (Physics.Raycast(ray.origin, ray.direction, out hit, castingDistance))
+            {
+                distanceToObstacle = hit.distance;
+            }
+            else distanceToObstacle = castingDistance;
+            
+            Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+            
+            Debug.Log(ray.origin + ray.direction * (distanceToObstacle - 1));
+            return ray.origin + ray.direction * (distanceToObstacle - 1);
+            
+        } while (distanceToObstacle < 1.0f);
+        
+        
     }
 
     private void MoveToNextWP()

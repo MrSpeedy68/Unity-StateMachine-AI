@@ -43,6 +43,7 @@ public class NPCController : MonoBehaviour
     private NavMeshAgent _NavMeshAgent;
     private float shootingTimer;
     private Vector3 randTarget;
+    private AmmoManager _ammoManager;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,7 @@ public class NPCController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
+        _ammoManager = GameObject.Find("AmmoManager").GetComponent<AmmoManager>();
         
         _animator.SetTrigger("startPatrol");
 
@@ -114,12 +116,28 @@ public class NPCController : MonoBehaviour
             Destroy(gameObject,25f);
         }
         
+        //Low Ammo
+        if (_animationStateInfo.IsName("FindAmmo"))
+        {
+            var closestAmmo = _ammoManager.ReturnClosestAmmo(transform.position);
+
+            _NavMeshAgent.SetDestination(closestAmmo);
+
+            Debug.Log(_NavMeshAgent.remainingDistance);
+            if (_NavMeshAgent.remainingDistance < 1.5)
+            {
+                _animator.SetTrigger("startPatrol");
+            }
+        }
+        
         //Smell Counter
         if (smellDuration > 0f)
         {
             smellDuration -= Time.deltaTime;
         }
         else _animator.SetBool("canSmellPlayer", false);
+        
+        
     }
 
     private void Sight()
@@ -169,6 +187,13 @@ public class NPCController : MonoBehaviour
         {
             Smell();
         }
+        
+        if (other.gameObject.CompareTag("Ammo"))
+        {
+            var ammobox = other.GetComponent<AmmoBox>();
+            AddAmmo(ammobox.boxAmmoAmount);
+            ammobox.Destroy();
+        }
     }
 
     public void TakeDamage(float damageAmount)
@@ -179,6 +204,12 @@ public class NPCController : MonoBehaviour
         _animator.SetFloat("health", health);
 
         StartCoroutine("StopFollowingPlayer");
+    }
+
+    private void AddAmmo(int ammoAmount)
+    {
+        currentAmmo += ammoAmount;
+        _animator.SetInteger("currentAmmo", currentAmmo);
     }
 
     private void Shoot()

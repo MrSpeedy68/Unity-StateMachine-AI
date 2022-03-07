@@ -52,6 +52,8 @@ public class NPCController : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
+        InitializeAIType();
+        
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
         _pickupManager = GameObject.Find("PickupManager").GetComponent<PickupManager>();
@@ -65,8 +67,6 @@ public class NPCController : MonoBehaviour
         _animator.SetFloat("health", health);
         
         randTarget = transform.position;
-        
-        InitializeAIType();
     }
 
     private void InitializeAIType()
@@ -142,11 +142,22 @@ public class NPCController : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, randTarget) < 1.0)
+                if (aiType == AIType.TheHunter)
                 {
-                    randTarget = MoveToRandomWP();
+                    if (Vector3.Distance(transform.position, randTarget) < 1.0)
+                    {
+                        randTarget = MoveTowardsPlayer();
+                    }
+                    _NavMeshAgent.SetDestination(randTarget);
                 }
-                _NavMeshAgent.SetDestination(randTarget);
+                else
+                {
+                    if (Vector3.Distance(transform.position, randTarget) < 1.0)
+                    {
+                        randTarget = MoveToRandomWP();
+                    }
+                    _NavMeshAgent.SetDestination(randTarget);
+                }
             }
         }
         
@@ -352,8 +363,6 @@ public class NPCController : MonoBehaviour
             return ray.origin + ray.direction * (distanceToObstacle - 1);
             
         } while (distanceToObstacle < 1.0f);
-        
-        
     }
 
     private void MoveToNextWP()
@@ -375,7 +384,15 @@ public class NPCController : MonoBehaviour
 
             return nextDest;
         }
+        return nextDest;
+    }
 
+    private Vector3 MoveTowardsPlayer()
+    {
+        var nextDest = MoveToRandomWP();
+        
+        nextDest = Vector3.Lerp(nextDest, _player.transform.position,0.35f);
+        
         return nextDest;
     }
     

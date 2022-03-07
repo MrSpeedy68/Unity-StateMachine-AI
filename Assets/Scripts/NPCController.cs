@@ -43,7 +43,7 @@ public class NPCController : MonoBehaviour
     private NavMeshAgent _NavMeshAgent;
     private float shootingTimer;
     private Vector3 randTarget;
-    private AmmoManager _ammoManager;
+    private PickupManager _pickupManager;
 
     // Start is called before the first frame update
     void Start()
@@ -51,7 +51,7 @@ public class NPCController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("FPSController");
         _NavMeshAgent = GetComponent<NavMeshAgent>();
-        _ammoManager = GameObject.Find("AmmoManager").GetComponent<AmmoManager>();
+        _pickupManager = GameObject.Find("PickupManager").GetComponent<PickupManager>();
         
         _animator.SetTrigger("startPatrol");
 
@@ -119,11 +119,23 @@ public class NPCController : MonoBehaviour
         //Low Ammo
         if (_animationStateInfo.IsName("FindAmmo"))
         {
-            var closestAmmo = _ammoManager.ReturnClosestAmmo(transform.position);
+            var closestAmmo = _pickupManager.ReturnClosestAmmo(transform.position);
 
             _NavMeshAgent.SetDestination(closestAmmo);
+            
+            if (_NavMeshAgent.remainingDistance < 1.5)
+            {
+                _animator.SetTrigger("startPatrol");
+            }
+        }
+        
+        //Low Health
+        if (_animationStateInfo.IsName("FindHealth"))
+        {
+            var closestHealth = _pickupManager.ReturnClosestHealth(transform.position);
 
-            Debug.Log(_NavMeshAgent.remainingDistance);
+            _NavMeshAgent.SetDestination(closestHealth);
+
             if (_NavMeshAgent.remainingDistance < 1.5)
             {
                 _animator.SetTrigger("startPatrol");
@@ -194,6 +206,13 @@ public class NPCController : MonoBehaviour
             AddAmmo(ammobox.boxAmmoAmount);
             ammobox.Destroy();
         }
+        
+        if (other.gameObject.CompareTag("Health"))
+        {
+            var medkit = other.GetComponent<Medkit>();
+            AddHealth(medkit.healthAmount);
+            medkit.Destroy();
+        }
     }
 
     public void TakeDamage(float damageAmount)
@@ -210,6 +229,12 @@ public class NPCController : MonoBehaviour
     {
         currentAmmo += ammoAmount;
         _animator.SetInteger("currentAmmo", currentAmmo);
+    }
+
+    private void AddHealth(float healthAmount)
+    {
+        health += healthAmount;
+        _animator.SetFloat("health", health);
     }
 
     private void Shoot()

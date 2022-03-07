@@ -7,6 +7,7 @@ TagManager:
   - BreadCrumb
   - AI
   - Ammo
+  - Health
   layers:
   - Default
   - TransparentFX

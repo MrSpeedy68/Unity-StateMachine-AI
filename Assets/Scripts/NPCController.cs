@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -24,6 +25,7 @@ public class NPCController : MonoBehaviour
     
     [Header("AI Type")]
     [SerializeField] private AIType aiType;
+    [SerializeField] private AnimatorController[] animatorControllers;
 
     private enum AIType
     {
@@ -44,6 +46,7 @@ public class NPCController : MonoBehaviour
     private float shootingTimer;
     private Vector3 randTarget;
     private PickupManager _pickupManager;
+    private bool _isCheckingResources;
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +65,43 @@ public class NPCController : MonoBehaviour
         _animator.SetFloat("health", health);
         
         randTarget = transform.position;
+        
+        InitializeAIType();
+    }
+
+    private void InitializeAIType()
+    {
+        if (aiType == AIType.ThePatroller)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Patroller");
+        }
+        
+        if (aiType == AIType.TheIntelligentPatroller)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Intelligent Patroller");
+            _isCheckingResources = true;
+        }
+
+        if (aiType == AIType.TheHunter)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Hunter");
+            _isCheckingResources = true;
+        }
+        
+        if (aiType == AIType.TheSniper)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Sniper");
+        }
+        
+        if (aiType == AIType.TheTeam)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Team");
+        }
+        
+        if (aiType == AIType.TheMob)
+        {
+            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Mob");
+        }
     }
 
     // Update is called once per frame
@@ -72,12 +112,8 @@ public class NPCController : MonoBehaviour
         Listen();
         Sight();
 
-        if (aiType == AIType.TheIntelligentPatroller)
-        {
-            CheckResources();
-        }
+        if (_isCheckingResources) CheckResources();
         
-
         if (_animationStateInfo.IsName("FollowPlayer"))
         {
             _NavMeshAgent.SetDestination(_player.transform.position);
@@ -341,6 +377,19 @@ public class NPCController : MonoBehaviour
         }
 
         return nextDest;
+    }
+    
+    private T FindByName<T>(T[] arr, string nameString)
+    {
+        foreach (var a in arr)
+        {
+            if (a.ToString().Replace(" (UnityEngine.AnimatorController)", "") == nameString)
+            {
+                return a;
+            }
+        }
+
+        return arr[0];
     }
 
     private void OnDrawGizmos()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,31 +8,49 @@ public class PickupManager : MonoBehaviour
     public GameObject[] ammo;
     public GameObject[] health;
 
-    public Vector3 ReturnClosestHealth(Vector3 currentPos)
+    public bool IsAmmoAvailable()
     {
-        var closestHealth = ammo[0].transform.position;
-        foreach (var h in health)
+        return CheckAvailability(ammo);
+    }
+
+    public bool IsHealthAvailable()
+    {
+        return CheckAvailability(health);
+    }
+
+    private bool CheckAvailability(GameObject[] arr)
+    {
+        for (int i = 0; i < arr.Length; i++)
         {
-            if (h != null && Vector3.Distance(currentPos, h.transform.position) < closestHealth.magnitude)
-            {
-                closestHealth = h.transform.position;
-            }   
+            if (arr[i] != null) return true;
         }
 
-        return closestHealth;
+        return false;
+    }
+
+    public Vector3 ReturnClosestHealth(Vector3 currentPos)
+    {
+        return ReturnClosestObject(currentPos, health);
     }
     
     public Vector3 ReturnClosestAmmo(Vector3 currentPos)
     {
-        var closestAmmo = ammo[0].transform.position;
-        foreach (var a in ammo)
+        return ReturnClosestObject(currentPos, ammo);
+    }
+
+    private Vector3 ReturnClosestObject(Vector3 currentPos, GameObject[] arr)
+    {
+        Vector3 closestObj = new Vector3(float.MaxValue,float.MaxValue,float.MaxValue);
+        foreach (var a in arr)
         {
-            if (a != null && Vector3.Distance(currentPos, a.transform.position) < closestAmmo.magnitude)
+            if (a != null && Vector3.Distance(currentPos, a.transform.position) < closestObj.magnitude)
             {
-                closestAmmo = a.transform.position;
+                closestObj = a.transform.position;
             }            
         }
 
-        return closestAmmo;
+        return closestObj;
     }
+    
+    
 }

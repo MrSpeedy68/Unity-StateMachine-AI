@@ -588,6 +588,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MedKit (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2506619235864432971, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2506619236668207459, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -1109,7 +1113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   magazineSize: 30
   fireRate: 45
-  damage: 30
+  damage: 10
   currentAmmo: 0
   cam: {fileID: 393607291}
 --- !u!1 &435989032
@@ -2795,6 +2799,10 @@ PrefabInstance:
     - target: {fileID: 2506619235864432971, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
       propertyPath: m_Name
       value: MedKit (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506619235864432971, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2506619236668207459, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
       propertyPath: m_Mesh
@@ -5436,6 +5444,10 @@ PrefabInstance:
     - target: {fileID: 2506619235864432971, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
       propertyPath: m_Name
       value: MedKit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506619235864432971, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2506619236668207459, guid: 57aeab0c3028ca64bb82bb25ca929a79, type: 3}
       propertyPath: m_Mesh

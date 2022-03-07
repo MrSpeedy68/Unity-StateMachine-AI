@@ -72,6 +72,12 @@ public class NPCController : MonoBehaviour
         Listen();
         Sight();
 
+        if (aiType == AIType.TheIntelligentPatroller)
+        {
+            CheckResources();
+        }
+        
+
         if (_animationStateInfo.IsName("FollowPlayer"))
         {
             _NavMeshAgent.SetDestination(_player.transform.position);
@@ -100,13 +106,22 @@ public class NPCController : MonoBehaviour
             }
             else
             {
-                
                 if (Vector3.Distance(transform.position, randTarget) < 1.0)
                 {
                     randTarget = MoveToRandomWP();
                 }
                 _NavMeshAgent.SetDestination(randTarget);
             }
+        }
+        
+        //Fleeing
+        if (_animationStateInfo.IsName("Flee"))
+        {
+            if (Vector3.Distance(transform.position, randTarget) < 1.0)
+            {
+                randTarget = Flee();
+            }
+            _NavMeshAgent.SetDestination(randTarget);
         }
 
         //Death
@@ -119,11 +134,16 @@ public class NPCController : MonoBehaviour
         //Low Ammo
         if (_animationStateInfo.IsName("FindAmmo"))
         {
-            var closestAmmo = _pickupManager.ReturnClosestAmmo(transform.position);
+            if (_pickupManager.IsAmmoAvailable())
+            {
+                var closestAmmo = _pickupManager.ReturnClosestAmmo(transform.position);
 
-            _NavMeshAgent.SetDestination(closestAmmo);
+                _NavMeshAgent.SetDestination(closestAmmo);
+            }
             
-            if (_NavMeshAgent.remainingDistance < 1.5)
+            Debug.Log("Ammo Dist" + _NavMeshAgent.remainingDistance);
+
+            if (_NavMeshAgent.remainingDistance < 2.5)
             {
                 _animator.SetTrigger("startPatrol");
             }
@@ -132,11 +152,16 @@ public class NPCController : MonoBehaviour
         //Low Health
         if (_animationStateInfo.IsName("FindHealth"))
         {
-            var closestHealth = _pickupManager.ReturnClosestHealth(transform.position);
+            if (_pickupManager.IsHealthAvailable())
+            {
+                var closestHealth = _pickupManager.ReturnClosestHealth(transform.position);
 
-            _NavMeshAgent.SetDestination(closestHealth);
+                _NavMeshAgent.SetDestination(closestHealth);
+            }
+            
+            Debug.Log("HealthDist" + _NavMeshAgent.remainingDistance);
 
-            if (_NavMeshAgent.remainingDistance < 1.5)
+            if (_NavMeshAgent.remainingDistance < 2.5)
             {
                 _animator.SetTrigger("startPatrol");
             }
@@ -148,8 +173,6 @@ public class NPCController : MonoBehaviour
             smellDuration -= Time.deltaTime;
         }
         else _animator.SetBool("canSmellPlayer", false);
-        
-        
     }
 
     private void Sight()
@@ -191,6 +214,12 @@ public class NPCController : MonoBehaviour
     {
         smellDuration = 3f;
         _animator.SetBool("canSmellPlayer", true);
+    }
+
+    private void CheckResources()
+    {
+        _animator.SetBool("isHealthAvailable", _pickupManager.IsHealthAvailable());
+        _animator.SetBool("isAmmoAvailable", _pickupManager.IsAmmoAvailable());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -298,6 +327,20 @@ public class NPCController : MonoBehaviour
         {
             _WPCount = 0;
         }
+    }
+
+    private Vector3 Flee()
+    {
+        var nextDest = MoveToRandomWP();
+
+        if (Vector3.Distance(nextDest, _player.transform.position) < 20)
+        {
+            nextDest = nextDest + (_player.transform.position * -1);
+
+            return nextDest;
+        }
+
+        return nextDest;
     }
 
     private void OnDrawGizmos()

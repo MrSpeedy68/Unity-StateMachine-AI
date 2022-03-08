@@ -11,6 +11,7 @@ public class NPCController : MonoBehaviour
     [Header("AI Movement")]
     public List<GameObject> wayPoints;
     public bool useRandomMovement;
+    public AmbushZone[] ambushZones;
     
     [Header("Detection Settings")]
     public float hearingDistance = 10f;
@@ -22,6 +23,7 @@ public class NPCController : MonoBehaviour
     public float weaponDamage;
     public int magazineSize;
     public int currentAmmo;
+    public GameObject granade;
     
     [Header("AI Type")]
     [SerializeField] private AIType aiType;
@@ -47,6 +49,7 @@ public class NPCController : MonoBehaviour
     private Vector3 randTarget;
     private PickupManager _pickupManager;
     private bool _isCheckingResources;
+    private Vector3 _ambushPos;
 
     // Start is called before the first frame update
     void Start()
@@ -112,6 +115,11 @@ public class NPCController : MonoBehaviour
         Listen();
         Sight();
 
+        if (aiType == AIType.TheSniper)
+        {
+            CheckAmbush();
+        }
+
         if (_isCheckingResources) CheckResources();
         
         if (_animationStateInfo.IsName("FollowPlayer"))
@@ -150,6 +158,14 @@ public class NPCController : MonoBehaviour
                     }
                     _NavMeshAgent.SetDestination(randTarget);
                 }
+                else if (aiType == AIType.TheSniper)
+                {
+                    if (Vector3.Distance(transform.position, randTarget) < 1.0)
+                    {
+                        randTarget = MoveTowardsPlayer() * -1;
+                    }
+                    _NavMeshAgent.SetDestination(randTarget);
+                }
                 else
                 {
                     if (Vector3.Distance(transform.position, randTarget) < 1.0)
@@ -170,6 +186,20 @@ public class NPCController : MonoBehaviour
             }
             _NavMeshAgent.SetDestination(randTarget);
         }
+        
+        //Ambush
+        if (_animationStateInfo.IsName("MoveToAmbush"))
+        {
+            _NavMeshAgent.SetDestination(_ambushPos);
+            _NavMeshAgent.speed = 5.5f;
+
+            if (Vector3.Distance(_NavMeshAgent.transform.position, _ambushPos) < 2.5f)
+            {
+                _animator.SetTrigger("throwGranade");
+                
+            }
+        }
+        else _NavMeshAgent.speed = 3.5f;
 
         //Death
         if (_animationStateInfo.IsName("Death"))
@@ -326,6 +356,18 @@ public class NPCController : MonoBehaviour
                 Debug.Log("Hit Player");
                 var Player = hit.collider.GetComponent<Player>();
                 Player.TakeDamage(weaponDamage);
+            }
+        }
+    }
+
+    private void CheckAmbush()
+    {
+        foreach (var aZ in ambushZones)
+        {
+            if (aZ.isPlayerPresent && !_animationStateInfo.IsName("MoveToAmbush"))
+            {
+                _animator.SetTrigger("goToAmbush");
+                _ambushPos = aZ.transform.position;
             }
         }
     }

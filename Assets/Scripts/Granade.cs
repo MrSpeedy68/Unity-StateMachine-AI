@@ -12,8 +12,9 @@ public class Granade : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= 3f)
         {
-            Instantiate(explosion, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            var exp = Instantiate(explosion, transform.position, Quaternion.identity);
+            Destroy(gameObject,5f);
+            Destroy(exp,5f);
         }
     }
 }

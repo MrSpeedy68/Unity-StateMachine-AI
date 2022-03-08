@@ -23,7 +23,6 @@ public class NPCController : MonoBehaviour
     public float weaponDamage;
     public int magazineSize;
     public int currentAmmo;
-    public GameObject granade;
     
     [Header("AI Type")]
     [SerializeField] private AIType aiType;
@@ -401,7 +400,7 @@ public class NPCController : MonoBehaviour
             
             Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
             
-            Debug.Log(ray.origin + ray.direction * (distanceToObstacle - 1));
+            //Debug.Log(ray.origin + ray.direction * (distanceToObstacle - 1));
             return ray.origin + ray.direction * (distanceToObstacle - 1);
             
         } while (distanceToObstacle < 1.0f);

@@ -8,6 +8,8 @@ TagManager:
   - AI
   - Ammo
   - Health
+  - Target
+  - TeamMember
   layers:
   - Default
   - TransparentFX

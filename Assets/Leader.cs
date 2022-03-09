@@ -24,6 +24,11 @@ public class Leader : MonoBehaviour
         {
             Attack();
         }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Retreat();
+        }
     }
 
     void Attack()
@@ -31,6 +36,14 @@ public class Leader : MonoBehaviour
         for (int i = 0; i < nbTargets; i++)
         {
             teamMembers[i].Attack(allTargets[i]);
+        }
+    }
+
+    void Retreat()
+    {
+        for (int i = 0; i < nbTeamMembers; i++)
+        {
+            teamMembers[i].Retreat();
         }
     }
 }

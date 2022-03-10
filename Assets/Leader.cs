@@ -13,6 +13,8 @@ public class Leader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        allTargets = GameObject.FindGameObjectsWithTag("AI");
+
         nbTeamMembers = teamMembers.Length;
         nbTargets = allTargets.Length;
     }
@@ -33,9 +35,25 @@ public class Leader : MonoBehaviour
 
     void Attack()
     {
-        for (int i = 0; i < nbTargets; i++)
+        int numTargets = 0;
+        if (allTargets != null)
         {
-            teamMembers[i].Attack(allTargets[i]);
+            for (int i = 0; i < nbTeamMembers; i++)
+            {
+                Debug.Log(numTargets);
+                if (numTargets < nbTargets)
+                {
+                    teamMembers[i].Attack(allTargets[numTargets]);
+                    numTargets++;
+                }
+                else
+                {
+                    numTargets = 0;
+                    teamMembers[i].Attack(allTargets[numTargets]);
+                    numTargets++;
+                }
+            
+            }
         }
     }
 

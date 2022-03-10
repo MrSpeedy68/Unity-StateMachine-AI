@@ -308,14 +308,14 @@ public class NPCController : MonoBehaviour
         {
             var ammobox = other.GetComponent<AmmoBox>();
             AddAmmo(ammobox.boxAmmoAmount);
-            ammobox.Destroy();
+            other.gameObject.SetActive(false);
         }
         
         if (other.gameObject.CompareTag("Health"))
         {
             var medkit = other.GetComponent<Medkit>();
             AddHealth(medkit.healthAmount);
-            medkit.Destroy();
+            other.gameObject.SetActive(false);
         }
     }
 

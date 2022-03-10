@@ -10,6 +10,7 @@ TagManager:
   - Health
   - Target
   - TeamMember
+  - Collectable
   layers:
   - Default
   - TransparentFX

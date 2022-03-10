@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private int magazineSize;
     [SerializeField] private float fireRate;
     [SerializeField] private float damage;
-    [SerializeField] private int currentAmmo;
+    public int currentAmmo;
     [SerializeField] private Camera cam;
     
     // Start is called before the first frame update

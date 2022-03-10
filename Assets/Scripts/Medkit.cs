@@ -5,10 +5,4 @@ using UnityEngine;
 public class Medkit : MonoBehaviour
 {
     public float healthAmount;
-
-
-    public void Destroy()
-    {
-        Destroy(gameObject);
-    }
 }

@@ -8,6 +8,15 @@ public class PickupManager : MonoBehaviour
     public GameObject[] ammo;
     public GameObject[] health;
 
+    public float respawnTime;
+
+
+    private void Start()
+    {
+        StartCoroutine("RespawnTimer");
+    }
+
+
     public bool IsAmmoAvailable()
     {
         return CheckAvailability(ammo);
@@ -43,7 +52,7 @@ public class PickupManager : MonoBehaviour
         Vector3 closestObj = new Vector3(float.MaxValue,float.MaxValue,float.MaxValue);
         foreach (var a in arr)
         {
-            if (a != null && Vector3.Distance(currentPos, a.transform.position) < closestObj.magnitude)
+            if (a != null && a.gameObject.activeSelf && Vector3.Distance(currentPos, a.transform.position) < closestObj.magnitude)
             {
                 closestObj = a.transform.position;
             }            
@@ -51,6 +60,24 @@ public class PickupManager : MonoBehaviour
 
         return closestObj;
     }
-    
+
+    private void Respawn(GameObject[] arr)
+    {
+        foreach (var a in arr)
+        {
+            if (!a.gameObject.activeSelf)
+            {
+                a.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    IEnumerator RespawnTimer()
+    {
+        yield return new WaitForSeconds(respawnTime);
+        Respawn(ammo);
+        Respawn(health);
+        StartCoroutine("RespawnTimer");
+    }
     
 }

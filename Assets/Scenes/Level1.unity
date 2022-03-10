@@ -959,6 +959,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5718583766242031812, guid: 2a4d97dfbc98c874c8c836f23412c85f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6bd056887aa75c04380736bb55d56a52, type: 2}
     - target: {fileID: 5718583766242031819, guid: 2a4d97dfbc98c874c8c836f23412c85f, type: 3}
       propertyPath: wayPoints.Array.size
       value: 6
@@ -2787,6 +2791,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5718583766242031812, guid: 2a4d97dfbc98c874c8c836f23412c85f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6bd056887aa75c04380736bb55d56a52, type: 2}
     - target: {fileID: 5718583766242031819, guid: 2a4d97dfbc98c874c8c836f23412c85f, type: 3}
       propertyPath: wayPoints.Array.size
       value: 2
@@ -12557,6 +12565,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2815332907052254973, guid: 987f1e95ce5d40342a3f0139f3b48eaa, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b7e957c4fdc88654194e8bbec7bd02ca, type: 2}
     - target: {fileID: 3158003610284059233, guid: 987f1e95ce5d40342a3f0139f3b48eaa, type: 3}
       propertyPath: m_Name
       value: The Hunter

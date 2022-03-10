@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -26,7 +26,7 @@ public class NPCController : MonoBehaviour
     
     [Header("AI Type")]
     [SerializeField] private AIType aiType;
-    [SerializeField] private AnimatorController[] animatorControllers;
+    //[SerializeField] private AnimatorController[] animatorControllers;
 
     private enum AIType
     {
@@ -83,34 +83,34 @@ public class NPCController : MonoBehaviour
     {
         if (aiType == AIType.ThePatroller)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Patroller");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Patroller");
         }
         
         if (aiType == AIType.TheIntelligentPatroller)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Intelligent Patroller");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Intelligent Patroller");
             _isCheckingResources = true;
         }
 
         if (aiType == AIType.TheHunter)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Hunter");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Hunter");
             _isCheckingResources = true;
         }
         
         if (aiType == AIType.TheSniper)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Sniper");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Sniper");
         }
         
         if (aiType == AIType.TheTeam)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Team");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Team");
         }
         
         if (aiType == AIType.TheMob)
         {
-            _animator.runtimeAnimatorController = FindByName(animatorControllers, "The Mob");
+            //_animator.runtimeAnimatorController = FindByName(animatorControllers, "The Mob");
         }
     }
 

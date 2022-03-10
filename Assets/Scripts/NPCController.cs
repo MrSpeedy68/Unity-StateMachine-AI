@@ -68,6 +68,15 @@ public class NPCController : MonoBehaviour
         _animator.SetFloat("health", health);
         
         randTarget = transform.position;
+
+        if (wayPoints != null)
+        {
+            foreach (var wp in wayPoints)
+            {
+                wp.GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+
     }
 
     private void InitializeAIType()

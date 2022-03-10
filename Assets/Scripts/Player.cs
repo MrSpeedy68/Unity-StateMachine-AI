@@ -9,11 +9,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float _health = 100f;
     [SerializeField] private float _ammo;
     [SerializeField] private int _collectableAmount = 0;
+    
+    private Vector3 _spawnLocation;
 
     private Weapon _weapon;
     // Start is called before the first frame update
     void Start()
     {
+        _spawnLocation = transform.position;
         _weapon = GetComponentInChildren<Weapon>();
     }
 
@@ -21,8 +24,14 @@ public class Player : MonoBehaviour
     {
         if (_collectableAmount == 10)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }   
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            Debug.Log("Win");
+        }
+
+        if (_health <= 0f)
+        {
+            transform.position = _spawnLocation;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,6 +53,7 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("Collectable"))
         {
             _collectableAmount++;
+            Destroy(other.gameObject);
         }
     }
 

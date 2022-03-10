@@ -49,7 +49,6 @@ public class NPCController : MonoBehaviour
     private PickupManager _pickupManager;
     private bool _isCheckingResources;
     private Vector3 _ambushPos;
-
     // Start is called before the first frame update
     void Start()
     {

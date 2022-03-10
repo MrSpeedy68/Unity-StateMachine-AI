@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     {
         if (_collectableAmount == 10)
         {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             Debug.Log("Win");
         }
 
@@ -54,6 +54,14 @@ public class Player : MonoBehaviour
         {
             _collectableAmount++;
             Destroy(other.gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("AI"))
+        {
+            TakeDamage(5f);
         }
     }
 

@@ -353,7 +353,6 @@ public class NPCController : MonoBehaviour
     private void Shoot()
     {
         currentAmmo--;
-        Debug.Log(currentAmmo);
         _animator.SetInteger("currentAmmo", currentAmmo);
         
         if (Physics.Raycast(transform.position + Vector3.up,transform.forward,out RaycastHit hit,float.MaxValue))
